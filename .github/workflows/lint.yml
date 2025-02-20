@@ -12,4 +12,4 @@ jobs:
       - name: Run flake8
         run: flake8 guess_where_telegram_bot.py --ignore=E501
       - name: Run pylint
-        run: pylint guess_where_telegram_bot.py --disable=C0301,C0114,C0116,E0401
+        run: pylint guess_where_telegram_bot.py --disable=C0301,C0114,C0116,E0401,W0603

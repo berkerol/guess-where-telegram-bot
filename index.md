@@ -4,7 +4,7 @@ Telegram bot that lets you guess the location of a random photo.
 
 ## Overview
 
-You can start by sending `/random` command to receive a random photo. Then you can enter your guess and send it as a message to receive feedback (true/false). Made with [python-telegram-bot](https://python-telegram-bot.org/). Inspired by another game of mine [guess-where](https://github.com/berkerol/guess-where).
+You can start by sending `/random` command to receive a random photo. Then you can enter your guess and send it as a message to receive feedback (true/false). You can also use `/filter` command to filter with prefixes for intermediate directories, for example for year it will be `/filter 2022 2023`. Made with [python-telegram-bot](https://python-telegram-bot.org/). Inspired by another game of mine [guess-where](https://github.com/berkerol/guess-where).
 
 ## Installation & Usage
 

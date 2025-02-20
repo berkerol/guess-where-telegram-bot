@@ -19,10 +19,16 @@ s3_client = boto3.client('s3', 'eu-central-1', aws_access_key_id=AWS_ACCESS_KEY,
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-paginator = s3_client.get_paginator('list_objects_v2')
 files = []
-for page in paginator.paginate(Bucket=S3_BUCKET, Prefix=S3_BUCKET_PREFIX):
-    files.extend([obj['Key'] for obj in page.get('Contents', [])])
+
+
+def get_files(prefixes: list[str]):
+    paginator = s3_client.get_paginator('list_objects_v2')
+    global files
+    files = []
+    for prefix in prefixes:
+        for page in paginator.paginate(Bucket=S3_BUCKET, Prefix=S3_BUCKET_PREFIX + prefix):
+            files.extend([obj['Key'] for obj in page.get('Contents', [])])
 
 
 def extract_location(file_path):
@@ -35,6 +41,14 @@ def extract_location(file_path):
         return parts[0].split(' - ')[-1]
     # format: country/city/**/jpg
     return parts[1]
+
+
+async def set_filter(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if context.args == ['all']:
+        get_files([''])
+    else:
+        get_files(context.args)
+    await update.message.reply_text('Filter is set!')
 
 
 async def send_random_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -63,8 +77,10 @@ async def check_location_guess(update: Update, context: ContextTypes.DEFAULT_TYP
         await update.message.reply_text(f"❌ Wrong! The correct location was: {correct_location.title()}")
 
 if __name__ == '__main__':
+    get_files([''])
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
+    application.add_handler(CommandHandler('filter', set_filter))
     application.add_handler(CommandHandler('random', send_random_photo))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), check_location_guess))
 
