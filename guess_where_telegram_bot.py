@@ -18,6 +18,8 @@ TELEGRAM_BOT_TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
 s3_client = boto3.client('s3', 'eu-central-1', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, config=Config(signature_version='s3v4'))
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.getLogger('httpx').setLevel(logging.WARNING)
+logger = logging.getLogger(__name__)
 
 files = []
 
@@ -55,9 +57,9 @@ async def send_random_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     file_key = random.choice(files)
     location = extract_location(file_key)
     file_url = s3_client.generate_presigned_url('get_object', Params={'Bucket': S3_BUCKET, 'Key': file_key})
-    logging.info(file_key)
-    logging.info(location)
-    logging.info(file_url)
+    logger.info(file_key)
+    logger.info(location)
+    logger.info(file_url)
 
     context.chat_data['correct_location'] = location.lower()
     await update.message.reply_photo(photo=file_url, caption='Guess the location!')
