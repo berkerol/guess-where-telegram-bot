@@ -75,6 +75,7 @@ async def check_location_guess(update: Update, context: ContextTypes.DEFAULT_TYP
         await update.message.reply_text('No photo has been sent yet. Use /random first!')
         return
 
+    context.chat_data['correct_location'] = ''
     city, country = correct_location.split(',')
     if user_guess == city or user_guess in city.split(' '):
         await update.message.reply_text('✅ Correct!')
