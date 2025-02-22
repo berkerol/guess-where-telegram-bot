@@ -1,7 +1,7 @@
 # Guess Where Telegram Bot
 
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=berkerol_guess-where-telegram-bot&metric=alert_status)](https://sonarcloud.io/dashboard?id=berkerol_guess-where-telegram-bot)
-[![CI](https://github.com/berkerol/guess-where-telegram-bot/actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/berkerol/guess-where-telegram-bot/actions/workflows/lint.yml)
+[![CI](https://github.com/berkerol/guess-where-telegram-bot/actions/workflows/lint_and_deploy.yml/badge.svg?branch=master)](https://github.com/berkerol/guess-where-telegram-bot/actions/workflows/lint_and_deploy.yml)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/berkerol/guess-where-telegram-bot/issues)
 [![license](https://img.shields.io/badge/license-GNU%20GPL%20v3.0-blue.svg)](https://github.com/berkerol/guess-where-telegram-bot/blob/master/LICENSE)
 
@@ -61,7 +61,7 @@ There must be at least one directory between bucket and photo directories in you
 
 ## Continous Integration
 
-It is setup using GitHub Actions in `.github/workflows/lint.yml`
+It is setup using GitHub Actions in `.github/workflows/lint_and_deploy.yml`
 
 ## Contribution
 

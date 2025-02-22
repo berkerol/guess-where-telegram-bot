@@ -1,0 +1,33 @@
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Install flake8 and pylint
+        run: pip install flake8 pylint
+      - name: Run flake8 on guess_where_telegram_bot.py
+        run: flake8 guess_where_telegram_bot.py --ignore=E501
+      - name: Run pylint on guess_where_telegram_bot.py
+        run: pylint guess_where_telegram_bot.py --disable=C0301,C0114,C0116,E0401,W0603
+      - name: Run flake8 on guess_where_telegram_bot_lambda_function.py
+        run: flake8 guess_where_telegram_bot_lambda_function.py --ignore=E501
+      - name: Run pylint on guess_where_telegram_bot_lambda_function.py
+        run: pylint guess_where_telegram_bot_lambda_function.py --disable=C0301,C0114,C0116,E0401
+  deploy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-central-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Create zip file
+        run: zip guess_where_telegram_bot_lambda_function.zip guess_where_telegram_bot_lambda_function.py
+      - name: Deploy to AWS Lambda
+        run: aws lambda update-function-code --function-name guess-where-telegram-bot --zip-file fileb://guess_where_telegram_bot_lambda_function.zip
