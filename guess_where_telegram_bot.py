@@ -1,13 +1,14 @@
 import logging
 import os
 import random
-import re
 
 import boto3
 
 from botocore.client import Config
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+
+import helper
 
 S3_BUCKET = os.environ['S3_BUCKET']
 S3_BUCKET_PREFIX = os.environ['S3_BUCKET_PREFIX']
@@ -33,19 +34,6 @@ def get_files(prefixes: list[str]):
             files.extend([obj['Key'] for obj in page.get('Contents', [])])
 
 
-def extract_city_and_country(file_path):
-    file_path = file_path.removeprefix(S3_BUCKET_PREFIX)
-    directories = file_path.split('/')
-    if re.match(r'^\d{4}$', directories[0]) is not None:  # remove the first dir with year if it exists
-        directories = directories[1:]
-    # format: date - order - country - city/**/jpg
-    if ' - ' in directories[0]:
-        parts = directories[0].split(' - ')
-        return parts[-1], parts[-2]
-    # format: country/city/**/jpg
-    return directories[1], directories[0]
-
-
 async def set_filter(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.args == ['all']:
         get_files([''])
@@ -56,7 +44,7 @@ async def set_filter(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def send_random_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     file_key = random.choice(files)
-    city, country = extract_city_and_country(file_key)
+    city, country = helper.extract_city_and_country(file_key, S3_BUCKET_PREFIX)
     file_url = s3_client.generate_presigned_url('get_object', Params={'Bucket': S3_BUCKET, 'Key': file_key})
     logger.info(file_key)
     logger.info(city)
