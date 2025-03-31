@@ -50,24 +50,7 @@ It is using the following AWS services.
 
 ### Prerequisites
 
-AWS services need to be set as following.
-
-* **Lambda** function
-  * Name: `guess-where-telegram-bot`
-  * Runtime: `Python 3.12`
-  * Architecture: `arm64`
-  * Layers: `AWS-Parameters-and-Secrets-Lambda-Extension-Arm64`
-  * Execution role that has access to DynamoDB, S3, Systems Manager Parameter Store, CloudWatch
-  * Function URL: enabled
-  * Environment variables: `S3_BUCKET`, `S3_BUCKET_PREFIX`, `PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL`
-* **DynamoDB** table
-  * Name: `guess-where-telegram-bot`
-  * Partition key: `chat_id` (string)
-* **S3** bucket
-  * Name: same as `S3_BUCKET` variable
-* **Systems Manager Parameter Store** parameter
-  * Name: `/guess-where-telegram-bot/TELEGRAM_BOT_TOKEN`
-  * Type: `SecureString`
+AWS services need to be set up with Terraform using `main.tf`.
 
 Telegram webhook needs to be set as following.
 
